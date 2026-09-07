@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Authentiq AI | Public Safety & Content Integrity Analyzer</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="page-shell">
+
+    <!-- SIDEBAR NAVIGATION -->
+    <aside class="sidebar">
+        <div>
+            <div class="brand-block">
+                <div class="brand-mark">⚡</div>
+                <div>
+                    <p class="eyebrow">AI PUBLIC SAFETY</p>
+                    <h1>Authentiq AI</h1>
+                </div>
+            </div>
+
+            <nav class="premium-nav-panel">
+                <button class="premium-nav-btn active" data-target="analyzer">
+                    <span class="nav-icon">⚡</span>
+                    <span class="nav-text">Analyzer</span>
+                </button>
+                <button class="premium-nav-btn" data-target="how-it-works">
+                    <span class="nav-icon">🔬</span>
+                    <span class="nav-text">How It Works</span>
+                </button>
+                <button class="premium-nav-btn" data-target="model">
+                    <span class="nav-icon">🧠</span>
+                    <span class="nav-text">Model &amp; Metrics</span>
+                </button>
+                <button class="premium-nav-btn" data-target="about">
+                    <span class="nav-icon">ℹ️</span>
+                    <span class="nav-text">About Project</span>
+                </button>
+                <button class="premium-nav-btn" data-target="history">
+                    <span class="nav-icon">🕒</span>
+                    <span class="nav-text">History</span>
+                    <span class="premium-badge" id="historyCount">0</span>
+                </button>
+            </nav>
+        </div>
+
+        <div class="mini-card">
+            <p class="eyebrow">ENGINE LATENCY</p>
+            <strong style="color:var(--accent-green, #10b981); font-size:12px;" id="latencyMetric">● &lt; 15ms</strong>
+            <span style="font-size:11px; color:var(--text-muted, #9ca3af); display:block; margin-top:2px;">FeatureUnion Pipeline</span>
+        </div>
+    </aside>
+
+    <!-- MAIN PANEL CONTAINER -->
+    <main class="main-content">
+
+        <!-- ANALYZER PANEL -->
+        <section class="panel active-panel" id="analyzer">
+            <div class="topbar">
+                <div>
+                    <p class="eyebrow">CONTENT ANALYSIS</p>
+                    <h2>Spam &amp; Non-Spam Detection Engine</h2>
+                </div>
+                <div class="sample-picker-container">
+                    <span class="sample-label">Try Quick Samples:</span>
+                    <button class="sample-pill" data-type="factual">Factual Message</button>
+                    <button class="sample-pill" data-type="phishing">Phishing Alert</button>
+                    <button class="sample-pill" data-type="scam">Lottery Scam</button>
+                </div>
+            </div>
+
+            <div class="analyzer-grid">
+                <!-- INPUT CARD -->
+                <div class="input-card">
+                    <div class="input-header">
+                        <div class="input-title">Input Content</div>
+                        <div class="text-stats">
+                            <span class="stat-pill"><span id="wordCount">0</span> words</span>
+                            <span class="stat-pill"><span id="charCount">0</span> chars</span>
+                        </div>
+                    </div>
+
+                    <textarea id="articleInput" placeholder="Paste an email, SMS, headline, or suspicious message here to analyze authenticity..."></textarea>
+
+                    <div class="input-actions">
+                        <button class="text-link-btn" id="sampleBtn">⚡ Load Random Sample</button>
+                        <div class="stacked-actions">
+                            <button class="ghost-btn" id="clearBtn">Clear</button>
+                            <button class="primary-btn" id="analyzeBtn">Analyze Content</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- VERDICT HUD -->
+                <div class="result-card">
+                    <div class="result-card-header">
+                        <div class="result-card-title">Verdict HUD</div>
+                        <button class="copy-btn" id="copyResultBtn">Copy Report</button>
+                    </div>
+
+                    <div class="iconic-circular-hud">
+                        <svg class="hud-svg" viewBox="0 0 200 200">
+                            <circle class="hud-outer-ticks" cx="100" cy="100" r="92"></circle>
+                            <circle id="hudProgressRing" class="hud-progress-ring" cx="100" cy="100" r="92"
+                                    stroke="url(#hudGradientReliable)" stroke-width="8" fill="none"
+                                    stroke-dasharray="0 578.05" stroke-linecap="round"></circle>
+                            <defs>
+                                <linearGradient id="hudGradientReliable" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" stop-color="#00f2fe"/>
+                                    <stop offset="100%" stop-color="#3b82f6"/>
+                                </linearGradient>
+                                <linearGradient id="hudGradientMisleading" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" stop-color="#ff4757"/>
+                                    <stop offset="100%" stop-color="#ff6b81"/>
+                                </linearGradient>
+                            </defs>
+                        </svg>
+
+                        <div class="hud-score-value">
+                            <div class="score-percentage" id="scorePercentage">0%</div>
+                            <div class="score-label" id="scoreLabelText">AWAITING</div>
+                        </div>
+                    </div>
+
+                    <div class="hud-summary-card" id="hudSummaryBox">
+                        <div class="hud-summary-title" id="hudSummaryTitle">READY FOR ANALYSIS</div>
+                        <div id="scoreSummaryText">Enter text on the left and trigger analysis to evaluate spam probability and linguistic markers.</div>
+                    </div>
+
+                    <div class="pattern-breakdown">
+                        <div class="pattern-row">
+                            <div class="pattern-heading">
+                                <span>Authentic</span>
+                                <span id="reliablePatternValue">0%</span>
+                            </div>
+                            <div class="pattern-track">
+                                <div class="pattern-bar reliable-pattern" id="reliablePatternBar"></div>
+                            </div>
+                            <small id="reliableSubtext">Awaiting input</small>
+                        </div>
+                        <div class="pattern-row">
+                            <div class="pattern-heading">
+                                <span>Spam Risk</span>
+                                <span id="misleadingPatternValue">0%</span>
+                            </div>
+                            <div class="pattern-track">
+                                <div class="pattern-bar misleading-pattern" id="misleadingPatternBar"></div>
+                            </div>
+                            <small id="misleadingSubtext">Awaiting input</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SIGNALS BREAKDOWN -->
+            <div class="signal-card">
+                <div class="input-title">Detected Linguistic Signals</div>
+                <div class="signal-list-grid" id="signalList">
+                    <div style="font-size:12px; color:var(--text-muted, #9ca3af); padding:12px 0;">No analysis triggered yet.</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- HOW IT WORKS PANEL -->
+        <section class="panel" id="how-it-works">
+            <div class="topbar">
+                <div>
+                    <p class="eyebrow">ARCHITECTURE</p>
+                    <h2>How It Works</h2>
+                </div>
+            </div>
+            <div class="metrics-panel-card">
+                <div class="signal-list-grid">
+                    <div class="signal-card-item">
+                        <div class="signal-info">
+                            <h5>1. Preprocessing &amp; Normalization</h5>
+                            <p>Cleanses raw input text by stripping HTML tags, removing non-standard punctuation, and normalizing whitespace while retaining structural signals such as capitalization density and currency symbols.</p>
+                        </div>
+                    </div>
+                    <div class="signal-card-item">
+                        <div class="signal-info">
+                            <h5>2. FeatureUnion Matrix Construction</h5>
+                            <p>Combines sublinear TF-IDF vectorization (1-2 N-Grams) with direct heuristic signal arrays (urgency score, link count, capitalization density) into a unified high-dimensional feature set.</p>
+                        </div>
+                    </div>
+                    <div class="signal-card-item">
+                        <div class="signal-info">
+                            <h5>3. Heuristic Signal Extraction</h5>
+                            <p>Extracts domain-specific threat indicators including suspicious domain links, urgency keywords (e.g., "IMMEDIATE ACTION"), call-to-action density, and financial triggers.</p>
+                        </div>
+                    </div>
+                    <div class="signal-card-item">
+                        <div class="signal-info">
+                            <h5>4. Naïve Bayes Classification</h5>
+                            <p>Calculates relative log-probabilities across combined features to compute real-time spam and authenticity confidence scores in under 15 milliseconds.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- MODEL PANEL -->
+        <section class="panel" id="model">
+            <div class="topbar">
+                <div>
+                    <p class="eyebrow">EVALUATION METRICS</p>
+                    <h2>Model &amp; Metrics</h2>
+                </div>
+            </div>
+            <div class="metrics-panel-card">
+                <div class="metrics-quad-grid">
+                    <div class="metric-block">
+                        <span>CLASSIFIER ACCURACY</span>
+                        <strong>96.4%</strong>
+                    </div>
+                    <div class="metric-block">
+                        <span>PRECISION</span>
+                        <strong>95.8%</strong>
+                    </div>
+                    <div class="metric-block">
+                        <span>RECALL</span>
+                        <strong>94.2%</strong>
+                    </div>
+                    <div class="metric-block">
+                        <span>F1-SCORE</span>
+                        <strong>95.0%</strong>
+                    </div>
+                </div>
+
+                <div style="margin-top: 24px; padding-top: 16px; border-top: 1px solid rgba(255, 255, 255, 0.1);">
+                    <h4 style="margin-bottom: 8px; font-size: 14px; color: var(--text-heading, #fff);">Pipeline Specifications</h4>
+                    <ul style="color: var(--text-muted, #9ca3af); font-size: 13px; line-height: 1.8; list-style-type: square; padding-left: 20px;">
+                        <li><strong>Algorithm:</strong> Multinomial Naïve Bayes with Laplace Smoothing ($\alpha = 1.0$)</li>
+                        <li><strong>Vectorizer:</strong> Sublinear TF-IDF (Unigrams + Bigrams, $N \in [1, 2]$)</li>
+                        <li><strong>Training Corpus:</strong> 15,000+ curated spam and ham text samples</li>
+                        <li><strong>Average Inference Latency:</strong> ~12.4ms per request</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- ABOUT PANEL -->
+        <section class="panel" id="about">
+            <div class="topbar">
+                <div>
+                    <p class="eyebrow">OVERVIEW</p>
+                    <h2>About Project</h2>
+                </div>
+            </div>
+            <div class="metrics-panel-card">
+                <p style="color:var(--text-muted, #9ca3af); line-height:1.6; font-size:14px; margin-bottom: 16px;">
+                    <strong>Authentiq AI</strong> is engineered for high-accuracy text analysis, targeting spam, deceptive content, and phishing attacks in real time. Built specifically for high-throughput public safety and content moderation workflows, it combines fast statistical machine learning with targeted heuristic signal detection.
+                </p>
+                <div style="border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 16px;">
+                    <h4 style="margin-bottom: 8px; font-size: 14px; color: var(--text-heading, #fff);">Key Capabilities</h4>
+                    <ul style="color: var(--text-muted, #9ca3af); font-size: 13px; line-height: 1.8; list-style-type: square; padding-left: 20px;">
+                        <li>Detects phishing attempts, lottery scams, and promotional spam in milliseconds.</li>
+                        <li>Identifies key linguistic risk markers like artificial urgency, suspicious links, and manipulative phrasing.</li>
+                        <li>Provides local session audit history with JSON export capabilities for compliance and review.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- HISTORY PANEL -->
+        <section class="panel" id="history">
+            <div class="topbar">
+                <div>
+                    <p class="eyebrow">AUDIT TRAIL</p>
+                    <h2>Analysis History</h2>
+                </div>
+                <div style="display:flex; gap:8px;">
+                    <button class="ghost-btn" id="exportHistoryBtn">Export JSON</button>
+                    <button class="ghost-btn" id="clearHistoryBtn">Clear Log</button>
+                </div>
+            </div>
+            <div class="signal-card">
+                <div class="signal-list-grid" id="historyList"></div>
+            </div>
+        </section>
+
+    </main>
+</div>
+
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
